@@ -20,6 +20,7 @@ from gtk import gdk
 
 import pango
 from lxml import etree
+from ast import literal_eval
 import gobject
 import ConfigParser
 import re, os
@@ -132,6 +133,7 @@ USER_VALUES = {}
 USER_SUBROUTINES = []
 TB_CATALOG = {}
 UNIQUE_ID = 10
+USER_EXTRA_PARAMS = {}
 
 UI_INFO = '''
 <ui>
@@ -531,28 +533,34 @@ class Tools(object):
         fn = search_path(search_warning.dialog, tool_table_file)
         if fn is not None :
             self.table_fname = fn
+            self.table_extra_fname = os.path.splitext(fn)[0]+'.py'
             self.load_table()
 
     def load_table(self, *arg):
         self.table = None
         self.table = []
         if self.table_fname is not None :
-            tbl = open(self.table_fname).read().split("\n")
-            for s in tbl :
-                s = s.strip()
-                if s.find(";") > 1:
-                    tnumber = '0'
-                    s = s.split(";")
-                    tdesc = s[1][0:]
-                    s = s[0][0:]
-                    s1 = s.split(" ")
-                    for s2 in s1 :
-                        if (len(s2) > 1) and (s2[0] == 'T') :
-                            tnumber = s2[1:]
-                    if tnumber != '0' :
-                        if tdesc == '' :
-                            tdesc = _('no description')
-                        self.table.append([int(tnumber), tnumber, tdesc])
+            with open(self.table_fname) as t_file:
+                tbl = t_file.read().split("\n")
+                for s in tbl :
+                    s = s.strip()
+                    if s.find(";") > 1:
+                        tnumber = '0'
+                        s = s.split(";")
+                        tdesc = s[1][0:]
+                        s = s[0][0:]
+                        s1 = s.split(" ")
+                        for s2 in s1 :
+                            if (len(s2) > 1) and (s2[0] == 'T') :
+                                tnumber = s2[1:]
+                        if tnumber != '0' :
+                            if tdesc == '' :
+                                tdesc = _('no description')
+                            self.table.append([int(tnumber), tnumber, tdesc])
+            with open(self.table_extra_fname) as t_file:
+                #global USER_EXTRA_PARAMS
+                #USER_EXTRA_PARAMS = literal_eval(t_file.read())
+                self.extra_params = literal_eval(t_file.read())
         self.table.append ([0, '0', _('None')])
         self.table.sort()
 
@@ -566,6 +574,23 @@ class Tools(object):
             if tool[1] == tn :
                 return tool[1] + ' - ' + tool[2]
         return '0 - ' + _('None')
+
+    def get_desc(self, tn):
+        for tool in self.table :
+            if tool[1] == tn :
+                return tool[2]
+        return _('None')
+
+    def get_extra_params(self,tn):
+        desc = self.get_desc(tn)
+        t = ""
+        if desc in self.extra_params:
+            params = self.extra_params[desc]
+            for i in params:
+                if 'param' in i:
+                    t += "#<_%s> = %s\n"%(i,params[i])
+        return t
+
 
 
 class CellRendererMx(gtk.CellRendererText):
@@ -1373,9 +1398,10 @@ class Parameter(object) :
             return max_v
 
 class Feature(object):
-    def __init__(self, src = None, xml = None) :
+    def __init__(self, src = None, xml = None, tools=None) :
         self.attr = {}
         self.param = []
+        self.tools = tools
         if src is not None :
             self.from_src(src)
         elif xml is not None :
@@ -1452,7 +1478,6 @@ class Feature(object):
         for s in parameters :
             if s in conf :
                 p = Parameter(ini = conf[s], ini_id = s.lower())
-
                 if default_metric and p.attr['type'] == 'float' \
                         and 'metric_value' in p.attr :
                     a_val = get_float(p.attr['metric_value']) / 25.4
@@ -1609,6 +1634,7 @@ class Feature(object):
             if fname is not None :
                 return str(open(fname).read())
 
+        extra_code = ''
         for p in self.param :
             if "call" in p.attr and "value" in p.attr :
                 if p.attr['type'] == 'text' :
@@ -1627,12 +1653,16 @@ class Feature(object):
                     s = re.sub(r"%s([^A-Za-z0-9_]|$)" %
                         (re.escape(p.attr["call"])), r"%s\1" %
                         lines, s)
-
-                else :
+                else:
+                    if p.attr['type'] == 'tool':
+                        extra_code = self.tools.get_extra_params(p.get_value(True))
                     s = re.sub(r"%s([^A-Za-z0-9_]|$)" %
                        (re.escape(p.attr["call"])), r"%s\1" %
                        p.get_value(True), s)
 
+        if len(extra_code) > 0:
+            extra_code += "#<_feed_normal> = #<_param_plasma_feedrate>"
+        s = re.sub(r"#extra_code", "%s"%extra_code, s)
         s = re.sub(r"#sub_name", "%s" % self.attr['name'], s)
         s = re.sub(r"%SYS_DIR%", "%s" % SYS_DIR, s)
         f_id = self.get_attr("id")
@@ -1647,6 +1677,7 @@ class Feature(object):
         if s.find("#ID") > -1 :
             f_id = self.get_short_id()
             s = re.sub(r"#ID", "%s" % f_id, s)
+
 
         s = s.lstrip('\n').rstrip('\n\t')
         if s == '' :
@@ -3486,7 +3517,7 @@ class NCam(gtk.VBox):
         def recursive(treestore, itr, xmlpath):
             for xml in xmlpath :
                 if xml.tag == "feature" :
-                    f = Feature(xml = xml)
+                    f = Feature(xml = xml, tools=self.tools)
                     tool_tip = f.get_tooltip()
                     citer = treestore.append(itr, [f, tool_tip, True, False])
 
@@ -3803,7 +3834,7 @@ class NCam(gtk.VBox):
                 if x.tag == "feature" :
                     l = [x] + l
                 for xf in l :
-                    f = Feature(xml = xf)
+                    f = Feature(xml = xf, tools=self.tools)
                     f.get_id(xml)
                     xf.set("name", f.attr["name"])
                     xf.set("id", f.attr["id"])
@@ -3822,7 +3853,7 @@ class NCam(gtk.VBox):
         if src_data.find(".//%s" % XML_TAG) > -1 :
             xml = etree.parse(src_file).getroot()
         elif src_data.find('[SUBROUTINE]') > -1 :
-            f = Feature(src_file)
+            f = Feature(src=src_file,tools=self.tools)
             f.attr['src'] = src
             xml = etree.Element(XML_TAG)
             xml.append(f.to_xml())

@@ -13,24 +13,22 @@
 			<menuitem action='ellipse' name=_('Ellipse')_ tool_tip=_('Create an ellipse')_ icon="ellipse.png" src="plasma/ellipse.cfg"/>
 			<menuitem action='polygon' name=_('Polygon')_ tool_tip=_('Polygon of N edges')_ icon="hexagon.png" src="plasma/polygon.cfg"/>
 		</menu>
-		<menu action='advanced' name=_('Advanced')_ icon='advanced.png'>
-			<menu action='polyline' name=_('Polyline')_ icon="polyline.png">
-				<menuitem action='poly_start' name=_('Begin')_ tool_tip=_('Starts a polyline')_ icon="polyline.png" src="plasma/polyline.cfg"/>
-				<separator/>
-				<menuitem action='polyline_to' name=_('Line To')_ tool_tip=_('Relative or absolute position')_ icon="line-to.png" src="plasma/polyline-to.cfg"/>
-				<menuitem action='polyline_pol' name=_('Line Polar')_ tool_tip=_('Define angle and length')_ icon="line-polar.png" src="plasma/polyline-polar.cfg"/>
-				<separator/>
-				<menuitem action='poly_arc_ij' name=_('Arc I,J')_ tool_tip=_('Defined center by offsets or absolute position')_ icon="arc-to-ij.png" src="plasma/polyline-arc-ij.cfg"/>
-				<menuitem action='poly_arc_pol_ctr' name=_('Arc Polar Center')_ tool_tip=_('Define center at angle and distance')_ icon="arc-polar-ctr.png" src="plasma/polyline-arc-polar.cfg"/>
-				<menuitem action='poly_arc_coords' name=_('Arc To Coords')_ tool_tip=_('Define end point, arc height or radius')_ icon="arc-to-coords.png" src="plasma/polyline-arc-to.cfg"/>
-				<menuitem action='poly_arc_to_pol' name=_('Arc To Polar')_ tool_tip=_('Define end point, arc height or radius')_ icon="arc-polar.png" src="plasma/polyline-arc-top.cfg"/>
-				<menuitem action='poly_bisector' name=_('Arc Mirror End')_ tool_tip=_('Define I,J and mirror line')_ icon="arc-bisector.png" src="plasma/polyline-arc-m.cfg"/>
-				<separator/>
-				<menuitem action='poly_repeat' name=_('Repeat Items')_ tool_tip=_('Repeat a group of polyline items')_ icon="poly-repeat-items.png" src="plasma/polyline-repeat.cfg"/>
-				<menuitem action='poly_mir_itms' name=_('Mirror Items')_ tool_tip=_('Duplicate and reverse polyline items')_ icon="polyline-mirror-items.png" src="plasma/polyline-mirror-i.cfg"/>
-				<separator/>
-				<menuitem action='poly_mirror' name=_('Mirror Polyline')_ tool_tip=_('Create a reversed polyline from previous one')_ icon="polyline-mirrored.png" src="plasma/polyline-mirror-p.cfg"/>
-			</menu>
+		<menu action='polyline' name=_('Polyline')_ icon="polyline.png">
+			<menuitem action='poly_start' name=_('Begin')_ tool_tip=_('Starts a polyline')_ icon="polyline.png" src="plasma/polyline.cfg"/>
+			<separator/>
+			<menuitem action='polyline_to' name=_('Line To')_ tool_tip=_('Relative or absolute position')_ icon="line-to.png" src="plasma/polyline-to.cfg"/>
+			<menuitem action='polyline_pol' name=_('Line Polar')_ tool_tip=_('Define angle and length')_ icon="line-polar.png" src="plasma/polyline-polar.cfg"/>
+			<separator/>
+			<menuitem action='poly_arc_ij' name=_('Arc I,J')_ tool_tip=_('Defined center by offsets or absolute position')_ icon="arc-to-ij.png" src="plasma/polyline-arc-ij.cfg"/>
+			<menuitem action='poly_arc_pol_ctr' name=_('Arc Polar Center')_ tool_tip=_('Define center at angle and distance')_ icon="arc-polar-ctr.png" src="plasma/polyline-arc-polar.cfg"/>
+			<menuitem action='poly_arc_coords' name=_('Arc To Coords')_ tool_tip=_('Define end point, arc height or radius')_ icon="arc-to-coords.png" src="plasma/polyline-arc-to.cfg"/>
+			<menuitem action='poly_arc_to_pol' name=_('Arc To Polar')_ tool_tip=_('Define end point, arc height or radius')_ icon="arc-polar.png" src="plasma/polyline-arc-top.cfg"/>
+			<menuitem action='poly_bisector' name=_('Arc Mirror End')_ tool_tip=_('Define I,J and mirror line')_ icon="arc-bisector.png" src="plasma/polyline-arc-m.cfg"/>
+			<separator/>
+			<menuitem action='poly_repeat' name=_('Repeat Items')_ tool_tip=_('Repeat a group of polyline items')_ icon="poly-repeat-items.png" src="plasma/polyline-repeat.cfg"/>
+			<menuitem action='poly_mir_itms' name=_('Mirror Items')_ tool_tip=_('Duplicate and reverse polyline items')_ icon="polyline-mirror-items.png" src="plasma/polyline-mirror-i.cfg"/>
+			<separator/>
+			<menuitem action='poly_mirror' name=_('Mirror Polyline')_ tool_tip=_('Create a reversed polyline from previous one')_ icon="polyline-mirrored.png" src="plasma/polyline-mirror-p.cfg"/>
 		</menu>
 		<menu action='groups' name=_('Group, Offset And Rotation')_ icon="group.png">
 			<menuitem action='group_std' name=_('Standard Group')_ tool_tip=_('Group subroutines')_ icon="group.png" src="group.cfg"/>
