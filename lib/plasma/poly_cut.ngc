@@ -25,6 +25,7 @@ o<poly_cut> sub
 	G#<_off_rot_coord_system>
 
 	(apply to new offsets)
+	o<rotate_xy> CALL [#<_offsets_x> + #<x>] [#<_offsets_y> + #<y>] [#<_offsets_x>] [#<_offsets_y>] [#<_offsets_r>]
 	o13 if [#<_has_z_axis>]
 		G10 L2 P#5220 X#<_rotated_x> Y#<_rotated_y> Z#<_offsets_z> R[#<_offsets_r> + #<rot>]
 	o13 else

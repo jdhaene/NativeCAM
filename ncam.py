@@ -566,13 +566,13 @@ class Tools(object):
 
         self.list = ''
         for tool in self.table :
-            self.list += tool[1] + ' - ' + tool[2] + '=' + tool[1] + ':'
+            self.list += tool[2] + '=' + tool[1] + ':'
         self.list = self.list.rstrip(':')
 
     def get_text(self, tn):
         for tool in self.table :
             if tool[1] == tn :
-                return tool[1] + ' - ' + tool[2]
+                return tool[2]
         return '0 - ' + _('None')
 
     def get_desc(self, tn):

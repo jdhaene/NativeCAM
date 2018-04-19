@@ -38,6 +38,7 @@
 			<menuitem action='group_arr' name=_('Rectangular Array')_ tool_tip=_('Array of rows and columns')_ icon="rect-array.png" src="rectangular-array.cfg"/>
 		</menu>
 		<menuitem action='cutting_params' name=_('Cutting Params')_ tool_tip=_('Set cutting parameters')_ icon="torch.png" src="plasma/cutting-params2d.cfg"/>
+		<menuitem action='drill' name=_('Puntslag')_ tool_tip=_('Puntslag zetten')_ icon="drill.png" src="plasma/drill-single.cfg"/>
 		<menu action='misc' name=_('Miscellaneous')_ icon='misc.png'>
 			<menuitem action='stock' name=_('Raw Material')_ tool_tip=_('Show a temporary image of rough material')_ icon="square.png" src="plasma/material2d.cfg"/>
 			<menuitem action='gcode' name=_('Custom G Code')_ tool_tip=_('Write custom gcode')_ icon="gcode.png" src="gcode.cfg"/>
